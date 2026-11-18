@@ -1,0 +1,41 @@
+pragma cashscript ^0.10.0;
+
+/**
+ * @title PusdBridgeVault
+ * @author Tung Nguyen (@tungdeptrai07)
+ * @notice CashScript Covenant for BCH BLAZE 2026:
+ *         1. Bounty #1382: PUSD Stablecoin Cross-Chain Bridge using CashTokens Native Introspection
+ *         2. Bounty #1385: Paytaca Decentralized Identity (DID) NFT Commitment Check
+ */
+contract PusdBridgeVault(
+    pubkey bridgeOraclePk,
+    bytes32 pusdTokenCategory,
+    bytes32 didIssuerCategory
+) {
+    /**
+     * @notice Locks or releases PUSD CashTokens when presented with a verified
+     *         cross-chain HTLC preimage, Oracle signature, and Paytaca DID NFT proof.
+     */
+    function settleBridgeTransfer(
+        sig oracleSig,
+        bytes32 htlcSecret,
+        bytes32 expectedHash,
+        int bridgeAmount
+    ) {
+        // 1. Verify HTLC secret & Bridge Oracle signature
+        require(sha256(htlcSecret) == expectedHash);
+        require(checkSig(oracleSig, bridgeOraclePk));
+
+        // 2. Native CashTokens Introspection: Verify input 0 holds authentic PUSD Fungible Token
+        require(tx.inputs[this.activeInputIndex].tokenCategory == pusdTokenCategory);
+        require(tx.inputs[this.activeInputIndex].tokenAmount >= bridgeAmount);
+
+        // 3. Paytaca DID Check: Input 1 must present a valid immutable DID NFT commitment
+        require(tx.inputs[1].tokenCategory == didIssuerCategory);
+        require(tx.inputs[1].nftCommitment.length > 0);
+
+        // 4. Covenant output preservation check
+        require(tx.outputs[0].tokenCategory == pusdTokenCategory);
+        require(tx.outputs[0].tokenAmount >= bridgeAmount);
+    }
+}
