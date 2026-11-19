@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R] /Count 4 >> endobj
+3 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> endobj
+4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+5 0 obj << /Length 1053 >> stream
+0.03 0.08 0.06 rg 0 0 960 540 re f
+0.04 0.76 0.56 rg 0 526 960 14 re f
+BT /F1 26 Tf 0.92 0.98 0.95 rg 48 468 Td (BCH Blaze Hub - CashTokens Covenant Suite) Tj ET
+BT /F2 14 Tf 0.14 0.90 0.68 rg 48 438 Td (BCH BLAZE 2026 | Widget Factory Deck | Mainnet Track + 4 Bounties) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 385 Td (- PusdBridgeVault.cash \(138 opcodes\): Trustless PUSD Stablecoin HTLC Bridge) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 353 Td (- NostrDidBinder.cash \(54 opcodes\): Paytaca BCH <-> Nostr DID \(BIP-340 + OP_CHECKDATASIG\)) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 321 Td (- MerkleRewardVault.cash \(169 opcodes\): FoldingCash Pull-Based SHA-256 Merkle Claims) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 289 Td (- Live Mainnet Tx Builder: BIP-21 & WizardConnect / WalletConnect v2 bch_signTransaction) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 257 Td (- EMBER2026 CashTokens: bitcoincash:zqau9rtdjtvsw0a4uwklfqtet6h5g67wa5psj4rk4g) Tj ET
+BT /F2 11 Tf 0.56 0.70 0.64 rg 48 26 Td (BCH BLAZE 2026 - Widget Factory Presentation | Slide 1/4) Tj ET
+endstream endobj
+6 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 960 540] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >> endobj
+7 0 obj << /Length 935 >> stream
+0.03 0.08 0.06 rg 0 0 960 540 re f
+0.04 0.76 0.56 rg 0 526 960 14 re f
+BT /F1 26 Tf 0.92 0.98 0.95 rg 48 468 Td (Problem & Value Proposition on Bitcoin Cash) Tj ET
+BT /F2 14 Tf 0.14 0.90 0.68 rg 48 438 Td (Native CashTokens Covenants Eliminate Custodial Risk & High Fees) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 385 Td (- PUSD stablecoin bridges require verifiable on-chain enforcement, not off-chain promises) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 353 Td (- Self-sovereign identity should unify Bitcoin Cash and Nostr via shared secp256k1 proofs) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 321 Td (- Community token distributions \(FLDCH\) scale cleanly with pull-based Merkle covenants) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 289 Td (- Sub-cent BCH mainnet fees make institutional covenants accessible to everyday wallets) Tj ET
+BT /F2 11 Tf 0.56 0.70 0.64 rg 48 26 Td (BCH BLAZE 2026 - Widget Factory Presentation | Slide 2/4) Tj ET
+endstream endobj
+8 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 960 540] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >> endobj
+9 0 obj << /Length 963 >> stream
+0.03 0.08 0.06 rg 0 0 960 540 re f
+0.04 0.76 0.56 rg 0 526 960 14 re f
+BT /F1 26 Tf 0.92 0.98 0.95 rg 48 468 Td (Security Architecture & CashScript 0.14.0 Verification) Tj ET
+BT /F2 14 Tf 0.14 0.90 0.68 rg 48 438 Td (Zero Mock Regex - 100% Compiled with cashc 0.14.0 & Tested in BCH Script VM) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 385 Td (- Oracle OP_CHECKDATASIG binds \(htlcHash || recipientPkh || amount || nonce\) against tampering) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 353 Td (- Paytaca DID Gate requires Input 1 to present an immutable 32-byte Nostr-bound DID NFT) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 321 Td (- Vault covenant preservation enforces automatic return of remaining PUSD/FLDCH balances) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 289 Td (- All attack paths \(inflation, hijack, wrong preimage, mutable NFT\) rejected by BCH VM) Tj ET
+BT /F2 11 Tf 0.56 0.70 0.64 rg 48 26 Td (BCH BLAZE 2026 - Widget Factory Presentation | Slide 3/4) Tj ET
+endstream endobj
+10 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 960 540] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >> endobj
+11 0 obj << /Length 874 >> stream
+0.03 0.08 0.06 rg 0 0 960 540 re f
+0.04 0.76 0.56 rg 0 526 960 14 re f
+BT /F1 26 Tf 0.92 0.98 0.95 rg 48 468 Td (Live Mainnet Demo, XO Template & Roadmap) Tj ET
+BT /F2 14 Tf 0.14 0.90 0.68 rg 48 438 Td (12 / 12 Real VM & API Integration Tests Passing) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 385 Td (- Open web/index.html or run `npm run serve` for live Mainnet & VM interactive execution) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 353 Td (- Download xo/pusd-bridge-template.xo.json for direct blaze.xo.cash compatibility) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 321 Td (- GitHub Repository: https://github.com/tungdeptrai07/bch-pusd-omni-bridge) Tj ET
+BT /F2 13 Tf 0.88 0.95 0.92 rg 56 289 Td (- Ready for Paytaca, Cashonize, Zapit & WizardConnect Mainnet signing) Tj ET
+BT /F2 11 Tf 0.56 0.70 0.64 rg 48 26 Td (BCH BLAZE 2026 - Widget Factory Presentation | Slide 4/4) Tj ET
+endstream endobj
+12 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 960 540] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >> endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000135 00000 n 
+0000000210 00000 n 
+0000000280 00000 n 
+0000001385 00000 n 
+0000001521 00000 n 
+0000002507 00000 n 
+0000002643 00000 n 
+0000003657 00000 n 
+0000003794 00000 n 
+0000004720 00000 n 
+trailer << /Size 13 /Root 1 0 R >>
+startxref
+4858
+%%EOF

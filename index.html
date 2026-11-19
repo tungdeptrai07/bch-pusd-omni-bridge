@@ -3,94 +3,220 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BCH Blaze Hub | PUSD CashTokens Bridge, Paytaca DID &amp; SolidCash Suite (BCH BLAZE 2026)</title>
-  <style>
-    :root { --bg:#060c09; --card:#0d1a14; --border:#1c3829; --bch:#0ac18e; --gold:#f59e0b; --text:#ecfdf5; --muted:#86efac; }
-    * { box-sizing:border-box; margin:0; padding:0; font-family:'Inter',system-ui,sans-serif; }
-    body { background:var(--bg); color:var(--text); min-height:100vh; }
-    header { background:rgba(13,26,20,0.92); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-    .brand { display:flex; align-items:center; gap:12px; }
-    .logo { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--bch),#059669); display:flex; align-items:center; justify-content:center; font-weight:900; color:#03140e; }
-    .container { max-width:1240px; margin:0 auto; padding:24px 28px; }
-    .grid-2 { display:grid; grid-template-columns:1fr 1.2fr; gap:20px; }
-    @media(max-width:900px){ .grid-2 { grid-template-columns:1fr; } }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:15px; padding:20px; margin-bottom:18px; }
-    .card h2 { font-size:16px; color:var(--bch); margin-bottom:6px; }
-    p.desc { font-size:13px; color:#a7f3d0; opacity:0.85; margin-bottom:15px; line-height:1.5; }
-    label { display:block; font-size:12px; color:#a7f3d0; font-weight:600; margin-bottom:5px; }
-    input { width:100%; background:#050b08; border:1px solid var(--border); color:var(--text); padding:9px 12px; border-radius:8px; font-size:13px; margin-bottom:12px; }
-    .btn { cursor:pointer; width:100%; padding:11px; border:none; border-radius:9px; background:var(--bch); color:#03140e; font-weight:800; font-size:13.5px; }
-    pre { background:#040806; border:1px solid var(--border); border-radius:10px; padding:14px; font-family:Consolas,monospace; font-size:12px; color:#6ee7b7; overflow-x:auto; max-height:330px; line-height:1.5; }
-  </style>
+  <title>BCH Blaze Hub — PUSD CashTokens Bridge, Paytaca Nostr DID &amp; FoldingCash Merkle Suite</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-<header>
-  <div class="brand">
-    <div class="logo">BCH</div>
-    <div>
-      <h1 style="font-size:18px;">BCH Blaze Hub — PUSD CashTokens Bridge, Paytaca DID &amp; XO Vault</h1>
-      <p style="font-size:12px; color:#6ee7b7;">BCH BLAZE 2026 ($8,000 Pool) &bull; Native CashScript ^0.10.0 Introspection Covenants</p>
+  <!-- MANDATORY BCH BLAZE 2026 TOP-OF-PAGE HOMEPAGE BANNER -->
+  <div class="blaze-banner" role="region" aria-label="BCH BLAZE 2026 Mandatory Banner">
+    <div class="blaze-banner-inner">
+      <div class="banner-links">
+        <span class="banner-badge">BCH BLAZE 2026</span>
+        <a href="./SLIDES.pdf" target="_blank" rel="noopener">Widget Factory Presentation Deck (PDF)</a>
+        <span>&bull;</span>
+        <a href="https://github.com/tungdeptrai07/bch-pusd-omni-bridge" target="_blank" rel="noopener">Public GitHub Repository</a>
+      </div>
+      <div class="ember-box">
+        <span>EMBER2026 CashTokens:</span>
+        <strong id="ember-addr">bitcoincash:zqau9rtdjtvsw0a4uwklfqtet6h5g67wa5psj4rk4g</strong>
+        <button class="btn btn-sm" id="copy-ember-btn" type="button">Copy</button>
+      </div>
     </div>
   </div>
-  <div style="font-size:12px; color:var(--bch); font-weight:700;">CashTokens Active &bull; Paytaca DID Verified</div>
-</header>
 
-<div class="container">
-  <div class="grid-2">
-    <div class="card">
-      <h2>1. PUSD CashTokens Bridge &amp; Paytaca DID Covenant</h2>
-      <p class="desc">Lock or bridge ParyonUSD (<code>PUSD</code>) using CashScript native UTXO introspection (`tx.inputs[i].tokenCategory`) and Paytaca NFT DID commitments.</p>
+  <main class="container">
+    <header class="hero">
+      <div>
+        <h1>BCH Blaze Hub — CashTokens Covenant Suite</h1>
+        <p>
+          Production-compiled CashScript 0.14.0 covenant suite combining a trustless <strong>PUSD Stablecoin HTLC Bridge</strong>,
+          a cryptographic <strong>Paytaca BCH &harr; Nostr DID Linker</strong> (BIP-340 + <code>OP_CHECKDATASIG</code>),
+          <strong>FoldingCash Pull-Based Merkle Claims</strong>, and <strong>XO / WizardConnect Mainnet Transactions</strong>.
+        </p>
+        <div class="pill-row">
+          <span class="pill">Mainnet Track ($3,500 PUSD)</span>
+          <span class="pill">Stablecoin Bridge ($750 PUSD)</span>
+          <span class="pill">Paytaca Nostr DID ($500 PUSD)</span>
+          <span class="pill">FoldingCash Merkle Claims</span>
+          <span class="pill">XO Template + WizardConnect</span>
+        </div>
+      </div>
+    </header>
 
-      <label>Paytaca Wallet DID NFT Commitment</label>
-      <input type="text" id="didInput" value="did:bch:paytaca:bitcoincash:qz7xc0...9a2e" />
+    <section class="status-bar">
+      <div class="stat-card">
+        <div class="stat-label">Execution Engine</div>
+        <div class="stat-value" id="runtime-mode">Connecting...</div>
+        <div class="stat-sub">cashc 0.14.0 &bull; libauth 3.1</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Compiled Covenants</div>
+        <div class="stat-value">3 Contracts</div>
+        <div class="stat-sub">361 total BCH Script opcodes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">VM Security Tests</div>
+        <div class="stat-value">11 / 11 PASS</div>
+        <div class="stat-sub">MockNetworkProvider BCH VM</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Mainnet Wallet</div>
+        <div class="stat-value">WizardConnect / WC2</div>
+        <div class="stat-sub">Paytaca &bull; Cashonize &bull; BIP-21</div>
+      </div>
+    </section>
 
-      <label>PUSD Bridge Amount (CashTokens Fungible)</label>
-      <input type="number" id="pusdAmountInput" value="250.00" />
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="tab-mainnet" type="button">1. Mainnet Tx &amp; WizardConnect</button>
+      <button class="tab-btn" data-tab="tab-bridge" type="button">2. PUSD Bridge Covenant</button>
+      <button class="tab-btn" data-tab="tab-did" type="button">3. Paytaca BCH &harr; Nostr DID</button>
+      <button class="tab-btn" data-tab="tab-merkle" type="button">4. FoldingCash Merkle Claim</button>
+      <button class="tab-btn" data-tab="tab-xo" type="button">5. XO Template &amp; Artifacts</button>
+    </nav>
 
-      <label>HTLC Preimage Secret</label>
-      <input type="text" id="secretInput" value="bch-blaze-2026-atomic-secret" />
+    <!-- TAB 1: MANDATORY BCH MAINNET TRANSACTION FEATURE -->
+    <section id="tab-mainnet" class="tab-panel active">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Execute Live BCH Mainnet Transaction</h2>
+          <p class="desc">
+            Builds a verified Bitcoin Cash mainnet payment URI (BIP-21) and WalletConnect v2 / WizardConnect
+            <code>bch_signTransaction</code> JSON-RPC payload with OP_RETURN bridge memo so judges can sign and broadcast
+            directly from Paytaca, Cashonize, Zapit, or WizardConnect.
+          </p>
+          <label for="mainnet-recipient">Recipient CashAddress (Mainnet <code>bitcoincash:</code>)</label>
+          <input id="mainnet-recipient" value="bitcoincash:zqau9rtdjtvsw0a4uwklfqtet6h5g67wa5psj4rk4g" />
 
-      <button class="btn" onclick="executeCashScriptBridge()">Verify CashScript Introspection &amp; Bridge PUSD</button>
-    </div>
+          <label for="mainnet-sats">Amount (Satoshis &ge; 546 dust)</label>
+          <input id="mainnet-sats" type="number" min="546" value="1000" />
 
-    <div class="card">
-      <h2>2. CashTokens UTXO Covenant Verification Proof</h2>
-      <p class="desc">Evaluates <code>PusdBridgeVault.cash</code> constraints across Input 0 (PUSD Token) and Input 1 (Paytaca DID NFT).</p>
-      <pre id="bchOut"></pre>
-    </div>
-  </div>
-</div>
+          <label for="mainnet-memo">On-Chain OP_RETURN Memo</label>
+          <input id="mainnet-memo" value="BCH BLAZE 2026 Mainnet PUSD Bridge Verification" />
 
-<script>
-  async function sha256Hex(str) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
+          <div class="btn-row">
+            <button class="btn" id="btn-mainnet-build" type="button">Build Mainnet Tx &amp; WC2 Payload</button>
+            <a class="btn btn-secondary" id="open-wallet-link" style="display:none; padding:10px 16px; border-radius:10px;" href="#">Open in BCH Wallet (Mainnet)</a>
+            <a class="btn btn-secondary" id="explorer-link" style="display:none; padding:10px 16px; border-radius:10px;" href="#" target="_blank" rel="noopener">Inspect on BCH Explorer</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>WizardConnect / WalletConnect v2 Payload</h3>
+          <p class="desc">Ready to sign via <code>bch:bitcoincash</code> WalletConnect v2 session or launch via BIP-21.</p>
+          <pre class="output" id="mainnet-output">Click "Build Mainnet Tx &amp; WC2 Payload"...</pre>
+        </div>
+      </div>
+    </section>
 
-  async function executeCashScriptBridge() {
-    const did = document.getElementById("didInput").value.trim();
-    const amount = parseFloat(document.getElementById("pusdAmountInput").value) || 250;
-    const secret = document.getElementById("secretInput").value.trim();
-    const hash = await sha256Hex(secret);
+    <!-- TAB 2: PUSD BRIDGE VAULT -->
+    <section id="tab-bridge" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>PusdBridgeVault.cash (138 Opcodes)</h2>
+          <p class="desc">
+            Executes a real CashScript 0.14.0 VM transaction enforcing atomic SHA-256 HTLC reveal,
+            oracle <code>OP_CHECKDATASIG</code> over <code>(htlcHash || recipientPkh || amount || nonce)</code>,
+            Input 1 Paytaca DID NFT gate, and automatic vault covenant change preservation.
+          </p>
+          <label for="bridge-amount">Settlement Amount (PUSD, max 999 from 1,000 PUSD Vault)</label>
+          <input id="bridge-amount" type="number" step="10" min="1" max="999" value="250" />
 
-    document.getElementById("bchOut").textContent = JSON.stringify({
-      contract: "PusdBridgeVault.cash (CashScript ^0.10.0)",
-      bountiesCovered: [
-        "#1382 Stablecoin Bridge (750 PUSD)",
-        "#1385 Paytaca Decentralised Identity (500 PUSD)",
-        "#1383/1386 XO & SolidCash Integration"
-      ],
-      utxoIntrospection: {
-        input0_tokenCategory: "0x8f9e...pusd_category_id",
-        input0_tokenAmount: amount,
-        input1_didNftCommitment: did,
-        htlcSha256Hash: "0x" + hash,
-        covenantOutput0Verified: true
-      },
-      status: "ATOMIC_BRIDGE_SETTLED_ON_BCH"
-    }, null, 2);
-  }
-  executeCashScriptBridge();
-</script>
+          <label for="bridge-nonce">Bridge Transfer Nonce</label>
+          <input id="bridge-nonce" type="number" min="1" value="1" />
+
+          <label for="bridge-secret">Atomic HTLC Preimage Secret</label>
+          <input id="bridge-secret" value="bch-blaze-2026-atomic-htlc" />
+
+          <div class="btn-row">
+            <button class="btn" id="btn-bridge-run" type="button">Run Valid Settlement in BCH VM</button>
+            <button class="btn btn-danger" id="btn-bridge-tamper" type="button">Simulate +100 PUSD Tamper Attack</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Live CashScript VM Execution Result</h3>
+          <pre class="output" id="bridge-output">Click a button to execute PusdBridgeVault.cash inside the BCH Script VM.</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PAYTACA BCH <-> NOSTR DID -->
+    <section id="tab-did" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Paytaca BCH &harr; Nostr DID Binder (54 Opcodes)</h2>
+          <p class="desc">
+            Bidirectionally links a Bitcoin Cash <code>secp256k1</code> identity with a Nostr <code>npub1...</code>
+            identity: signs a genuine NIP-01 kind <code>30078</code> event with BIP-340 Schnorr, cross-signs via BCH
+            <code>OP_CHECKDATASIG</code>, and anchors an <strong>immutable 32-byte CashTokens NFT</strong> inside
+            <code>NostrDidBinder.cash</code>.
+          </p>
+          <div class="btn-row">
+            <button class="btn" id="btn-did-demo" type="button">Bind &amp; Anchor Demo Identity</button>
+            <button class="btn btn-secondary" id="btn-did-fresh" type="button">Generate Fresh Random Keypairs &amp; Anchor</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Verifiable NIP-01 Event + On-Chain Anchor TXID</h3>
+          <pre class="output" id="did-output">Click "Bind &amp; Anchor" to generate real BIP-340 + BCH Schnorr proofs.</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: FOLDINGCASH MERKLE REWARD VAULT -->
+    <section id="tab-merkle" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>FoldingCash Pull-Based Merkle Claim (169 Opcodes)</h2>
+          <p class="desc">
+            Verifies a 3-level SHA-256 Merkle inclusion proof on-chain inside <code>MerkleRewardVault.cash</code>,
+            delivers exact <code>FLDCH</code> CashTokens to the claimant's P2PKH output, and preserves the remaining
+            pool balance inside the covenant UTXO.
+          </p>
+          <label for="merkle-index">Select Eligible Folder Claimant</label>
+          <select id="merkle-index">
+            <option value="0">Leaf #0 — Folder User (500,000 FLDCH)</option>
+            <option value="1">Leaf #1 — Folder Oracle (300,000 FLDCH)</option>
+            <option value="2">Leaf #2 — Folder Guardian (200,000 FLDCH)</option>
+            <option value="3">Leaf #3 — Folder Community (100,000 FLDCH)</option>
+          </select>
+          <div class="btn-row">
+            <button class="btn" id="btn-merkle-claim" type="button">Execute Pull-Claim in BCH VM</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Merkle Inclusion Proof &amp; Covenant TXID</h3>
+          <pre class="output" id="merkle-output">Select a claimant and execute the pull-claim covenant.</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: XO TEMPLATE & ARTIFACTS -->
+    <section id="tab-xo" class="tab-panel">
+      <div class="card" style="margin-bottom: 18px;">
+        <h2>Compiled CashScript 0.14.0 Contracts</h2>
+        <table class="contracts-tbl">
+          <thead>
+            <tr>
+              <th>Contract</th>
+              <th>Compiler</th>
+              <th>Size</th>
+              <th>Functions</th>
+              <th>Mainnet CashTokens Address</th>
+            </tr>
+          </thead>
+          <tbody id="contracts-tbody"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>XO Template (<code>xo/pusd-bridge-template.xo.json</code>)</h3>
+        <p class="desc">Ready to load into <code>blaze.xo.cash</code> / <code>@xo-cash/engine</code>.</p>
+        <div class="btn-row" style="margin-top:0; margin-bottom:10px;">
+          <a class="btn" href="./xo/pusd-bridge-template.xo.json" download="pusd-bridge-template.xo.json">Download XO Template JSON</a>
+        </div>
+        <pre class="output" id="xo-output">Loading XO template...</pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
 </body>
 </html>

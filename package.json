@@ -1,0 +1,29 @@
+{
+  "name": "bch-pusd-omni-bridge",
+  "version": "2.0.0",
+  "description": "BCH Blaze Hub — CashTokens PUSD Bridge Covenant, Paytaca BCH<->Nostr DID Linker, FoldingCash Merkle Claims & XO Template Suite for BCH BLAZE 2026",
+  "type": "module",
+  "scripts": {
+    "compile": "node scripts/compile.mjs",
+    "test": "node --test tests/bch_contracts.test.mjs tests/server.test.mjs",
+    "serve": "node server.mjs"
+  },
+  "keywords": [
+    "bitcoin-cash",
+    "cashtokens",
+    "cashscript",
+    "bch-blaze-2026",
+    "pusd",
+    "nostr",
+    "did",
+    "xo-cash"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@bitauth/libauth": "^3.1.0-next.8",
+    "@noble/curves": "^2.4.0",
+    "@noble/hashes": "^2.4.0",
+    "cashc": "^0.14.0",
+    "cashscript": "^0.14.0"
+  }
+}
