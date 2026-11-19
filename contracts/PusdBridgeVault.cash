@@ -1,41 +1,84 @@
-pragma cashscript ^0.10.0;
+pragma cashscript ^0.14.0;
 
 /**
  * @title PusdBridgeVault
  * @author Tung Nguyen (@tungdeptrai07)
- * @notice CashScript Covenant for BCH BLAZE 2026:
- *         1. Bounty #1382: PUSD Stablecoin Cross-Chain Bridge using CashTokens Native Introspection
- *         2. Bounty #1385: Paytaca Decentralized Identity (DID) NFT Commitment Check
+ * @notice BCH BLAZE 2026 — Mainnet Track + Stablecoin Bridge ($750 PUSD) + Paytaca DID ($500 PUSD)
+ *
+ * Security invariants:
+ * 1. Oracle attestation (`checkDataSig`) cryptographically binds:
+ *    (htlcHash || recipientPkh || bytes8(bridgeAmount) || bytes8(transferNonce))
+ *    preventing parameter substitution, amount inflation, or recipient hijacking.
+ * 2. Atomic HTLC reveal (`sha256(htlcSecret) == htlcHash`) guarantees cross-chain finality.
+ * 3. Native CashTokens introspection enforces authentic PUSD category & amount conservation.
+ * 4. Paytaca DID Gate requires Input 1 to present an immutable 32-byte Nostr-linked DID NFT.
+ * 5. Covenant continuation returns any remaining PUSD balance back to this exact vault script.
+ * 6. Absolute timelock refund (`tx.time >= refundLocktime`) guarantees funds can never be stranded.
  */
 contract PusdBridgeVault(
     pubkey bridgeOraclePk,
+    pubkey guardianRefundPk,
     bytes32 pusdTokenCategory,
-    bytes32 didIssuerCategory
+    bytes32 didIssuerCategory,
+    int refundLocktime
 ) {
     /**
-     * @notice Locks or releases PUSD CashTokens when presented with a verified
-     *         cross-chain HTLC preimage, Oracle signature, and Paytaca DID NFT proof.
+     * @notice Settle an attested cross-chain PUSD CashTokens transfer to a DID-verified BCH recipient.
      */
     function settleBridgeTransfer(
-        sig oracleSig,
+        datasig oracleDataSig,
         bytes32 htlcSecret,
-        bytes32 expectedHash,
-        int bridgeAmount
+        bytes32 htlcHash,
+        bytes20 recipientPkh,
+        int bridgeAmount,
+        int transferNonce
     ) {
-        // 1. Verify HTLC secret & Bridge Oracle signature
-        require(sha256(htlcSecret) == expectedHash);
-        require(checkSig(oracleSig, bridgeOraclePk));
+        require(bridgeAmount > 0, "Bridge amount must be positive");
+        require(transferNonce >= 0, "Transfer nonce must be non-negative");
 
-        // 2. Native CashTokens Introspection: Verify input 0 holds authentic PUSD Fungible Token
-        require(tx.inputs[this.activeInputIndex].tokenCategory == pusdTokenCategory);
-        require(tx.inputs[this.activeInputIndex].tokenAmount >= bridgeAmount);
+        // 1. Atomic HTLC preimage check
+        require(sha256(htlcSecret) == htlcHash, "Invalid HTLC secret preimage");
 
-        // 3. Paytaca DID Check: Input 1 must present a valid immutable DID NFT commitment
-        require(tx.inputs[1].tokenCategory == didIssuerCategory);
-        require(tx.inputs[1].nftCommitment.length > 0);
+        // 2. Oracle attestation binding all settlement fields
+        bytes attestationPayload = htlcHash + recipientPkh + toPaddedBytes(bridgeAmount, 8) + toPaddedBytes(transferNonce, 8);
+        require(
+            checkDataSig(oracleDataSig, attestationPayload, bridgeOraclePk),
+            "Invalid bridge oracle data signature"
+        );
 
-        // 4. Covenant output preservation check
-        require(tx.outputs[0].tokenCategory == pusdTokenCategory);
-        require(tx.outputs[0].tokenAmount >= bridgeAmount);
+        // 3. Vault CashTokens introspection (this active input must hold authentic PUSD)
+        bytes vaultCategory = tx.inputs[this.activeInputIndex].tokenCategory;
+        int vaultPusdBalance = tx.inputs[this.activeInputIndex].tokenAmount;
+        require(vaultCategory == pusdTokenCategory, "Vault input is not authentic PUSD");
+        require(vaultPusdBalance >= bridgeAmount, "Insufficient PUSD liquidity in vault");
+
+        // 4. Paytaca DID NFT Gate: Input 1 must present an immutable 32-byte Nostr-bound DID NFT
+        require(tx.inputs[1].tokenCategory == didIssuerCategory, "Missing valid Paytaca DID NFT on input 1");
+        require(tx.inputs[1].nftCommitment.length == 32, "DID NFT must commit 32-byte Nostr x-only pubkey");
+
+        // 5. Output 0 must deliver exact PUSD tokens to the oracle-attested recipient P2PKH
+        bytes25 expectedRecipientLock = new LockingBytecodeP2PKH(recipientPkh);
+        require(tx.outputs[0].lockingBytecode == expectedRecipientLock, "Output 0 locking bytecode mismatch");
+        require(tx.outputs[0].tokenCategory == pusdTokenCategory, "Output 0 token category mismatch");
+        require(tx.outputs[0].tokenAmount == bridgeAmount, "Output 0 PUSD amount mismatch");
+
+        // 6. Covenant preservation: return remaining PUSD balance back to this vault
+        int remainingPusd = vaultPusdBalance - bridgeAmount;
+        if (remainingPusd > 0) {
+            require(
+                tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode,
+                "Remaining PUSD must return to vault covenant"
+            );
+            require(tx.outputs[1].tokenCategory == pusdTokenCategory, "Vault change token category mismatch");
+            require(tx.outputs[1].tokenAmount == remainingPusd, "Vault change PUSD amount mismatch");
+        }
+    }
+
+    /**
+     * @notice Guardian emergency recovery after the absolute UNIX locktime expires.
+     */
+    function reclaimExpired(sig guardianSig) {
+        require(tx.time >= refundLocktime, "Refund locktime not yet reached");
+        require(checkSig(guardianSig, guardianRefundPk), "Invalid guardian signature");
     }
 }

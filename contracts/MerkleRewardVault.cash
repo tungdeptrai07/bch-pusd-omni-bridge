@@ -1,0 +1,87 @@
+pragma cashscript ^0.14.0;
+
+/**
+ * @title MerkleRewardVault
+ * @author Tung Nguyen (@tungdeptrai07)
+ * @notice BCH BLAZE 2026 — FoldingCash Pull-Based Merkle Reward Claims Covenant
+ *
+ * Enables trustless pull-based CashTokens reward distribution using a 3-level (8-leaf)
+ * SHA-256 Merkle tree commitment. Each claim verifies inclusion of `(recipientPkh || bytes8(rewardAmount))`,
+ * delivers exact CashTokens to the claimant's P2PKH address, and preserves remaining pool liquidity
+ * back inside this covenant.
+ */
+contract MerkleRewardVault(
+    bytes32 merkleRoot,
+    bytes32 rewardTokenCategory,
+    pubkey distributorPk,
+    int expiryTime
+) {
+    /**
+     * @notice Pull-claim CashTokens rewards by presenting a valid 3-level SHA-256 Merkle inclusion proof.
+     */
+    function claimReward(
+        bytes20 recipientPkh,
+        int rewardAmount,
+        bytes32 sibling0,
+        bool isRight0,
+        bytes32 sibling1,
+        bool isRight1,
+        bytes32 sibling2,
+        bool isRight2
+    ) {
+        require(rewardAmount > 0, "Reward amount must be positive");
+
+        // 1. Compute leaf hash = sha256(recipientPkh || toPaddedBytes(rewardAmount, 8))
+        bytes32 h0 = sha256(recipientPkh + toPaddedBytes(rewardAmount, 8));
+
+        // 2. Walk 3-level SHA-256 Merkle branch
+        bytes32 h1 = sha256(sibling0 + h0);
+        if (isRight0) {
+            h1 = sha256(h0 + sibling0);
+        }
+
+        bytes32 h2 = sha256(sibling1 + h1);
+        if (isRight1) {
+            h2 = sha256(h1 + sibling1);
+        }
+
+        bytes32 computedRoot = sha256(sibling2 + h2);
+        if (isRight2) {
+            computedRoot = sha256(h2 + sibling2);
+        }
+        require(computedRoot == merkleRoot, "Invalid Merkle inclusion proof");
+
+        // 3. Verify vault holds authentic reward CashTokens
+        require(
+            tx.inputs[this.activeInputIndex].tokenCategory == rewardTokenCategory,
+            "Vault input holds wrong token category"
+        );
+        int poolBalance = tx.inputs[this.activeInputIndex].tokenAmount;
+        require(poolBalance >= rewardAmount, "Insufficient reward pool balance");
+
+        // 4. Output 0 pays the verified claimant P2PKH
+        bytes25 claimantLock = new LockingBytecodeP2PKH(recipientPkh);
+        require(tx.outputs[0].lockingBytecode == claimantLock, "Output 0 must pay claimant P2PKH");
+        require(tx.outputs[0].tokenCategory == rewardTokenCategory, "Output 0 token category mismatch");
+        require(tx.outputs[0].tokenAmount == rewardAmount, "Output 0 reward amount mismatch");
+
+        // 5. Covenant preservation for remaining reward pool
+        int remaining = poolBalance - rewardAmount;
+        if (remaining > 0) {
+            require(
+                tx.outputs[1].lockingBytecode == tx.inputs[this.activeInputIndex].lockingBytecode,
+                "Remaining reward pool must return to covenant"
+            );
+            require(tx.outputs[1].tokenCategory == rewardTokenCategory, "Pool change category mismatch");
+            require(tx.outputs[1].tokenAmount == remaining, "Pool change amount mismatch");
+        }
+    }
+
+    /**
+     * @notice Sweep unclaimed tokens after campaign expiry.
+     */
+    function sweepExpired(sig distributorSig) {
+        require(tx.time >= expiryTime, "Campaign not yet expired");
+        require(checkSig(distributorSig, distributorPk), "Unauthorized distributor sweep");
+    }
+}

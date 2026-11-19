@@ -1,0 +1,52 @@
+pragma cashscript ^0.14.0;
+
+/**
+ * @title NostrDidBinder
+ * @author Tung Nguyen (@tungdeptrai07)
+ * @notice BCH BLAZE 2026 — Paytaca Decentralised Identity Bounty ($500 PUSD)
+ *
+ * Cryptographically links a Bitcoin Cash secp256k1 identity with a Nostr (BIP-340 x-only) pubkey:
+ * - Off-chain: Nostr key signs a NIP-01 event referencing the BCH CashAddress (event ID = nip01EventHash).
+ * - On-chain: BCH owner signs both the transaction (`checkSig`) and a `checkDataSig` attestation
+ *   over `(nostrXOnlyPubkey || nip01EventHash)`, anchoring `nostrXOnlyPubkey` into an immutable
+ *   32-byte CashTokens NFT commitment on Output 0 while optionally retaining a minting baton on Output 1.
+ */
+contract NostrDidBinder(
+    pubkey bchOwnerPk,
+    bytes32 didIssuerCategory
+) {
+    /**
+     * @notice Mint/anchor an immutable BCH <-> Nostr DID NFT with a 32-byte Nostr x-only pubkey commitment.
+     */
+    function bindNostrIdentity(
+        sig bchOwnerSig,
+        datasig crossBindingSig,
+        bytes32 nostrXOnlyPubkey,
+        bytes32 nip01EventHash
+    ) {
+        // 1. Verify BCH owner authorizes the transaction and commits to (nostrPubkey || nip01EventHash)
+        require(checkSig(bchOwnerSig, bchOwnerPk), "Invalid BCH owner transaction signature");
+        bytes bindingPayload = nostrXOnlyPubkey + nip01EventHash;
+        require(
+            checkDataSig(crossBindingSig, bindingPayload, bchOwnerPk),
+            "Invalid BCH<->Nostr cross-binding data signature"
+        );
+
+        // 2. Verify active input carries the authorized DID issuer category (allowing minting/mutable baton)
+        bytes rawCategory = tx.inputs[this.activeInputIndex].tokenCategory;
+        bytes activeBaseCategory = rawCategory.split(32)[0];
+        require(activeBaseCategory == didIssuerCategory, "Active input does not hold DID issuer token");
+
+        // 3. Output 0 must be an IMMUTABLE CashTokens NFT (32-byte category, no capability byte)
+        //    whose commitment is the exact 32-byte Nostr x-only pubkey
+        require(tx.outputs[0].tokenCategory == didIssuerCategory, "Output 0 must be an immutable DID NFT");
+        require(tx.outputs[0].nftCommitment == nostrXOnlyPubkey, "Output 0 commitment must equal Nostr pubkey");
+    }
+
+    /**
+     * @notice Allow the BCH owner to rotate or close the DID binder covenant UTXO.
+     */
+    function rotateBinder(sig bchOwnerSig) {
+        require(checkSig(bchOwnerSig, bchOwnerPk), "Invalid BCH owner signature");
+    }
+}
